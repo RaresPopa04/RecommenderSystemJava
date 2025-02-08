@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Recommender-System
+
+server:
+  port: 8081
