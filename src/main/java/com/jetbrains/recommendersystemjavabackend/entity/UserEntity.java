@@ -4,6 +4,7 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class UserEntity {
@@ -17,6 +18,9 @@ public class UserEntity {
 
     @Column(name = "password", nullable = false, length = 255)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserPreferenceEntity> preferredGenres;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
