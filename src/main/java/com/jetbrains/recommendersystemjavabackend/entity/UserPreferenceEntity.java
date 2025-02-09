@@ -16,7 +16,7 @@ public class UserPreferenceEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "genre", nullable = false)
+    @Column(name = "genre", nullable = false, length = 50)
     private String genre;
 
     @Column(name = "created_at", nullable = false)

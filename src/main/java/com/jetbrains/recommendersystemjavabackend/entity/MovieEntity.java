@@ -16,11 +16,14 @@ public class MovieEntity {
     @Column(name = "title", nullable = false, length = 300)
     private String title;
 
-    @Column(name = "imdbId", nullable = false)
-    private Long imdbId;
+    @Column(name = "imdb_id", nullable = false, length = 50)
+    private String imdbId;
 
     @OneToMany(mappedBy = "movie")
     private List<MovieGenreEntity> genres;
+
+    @OneToMany(mappedBy = "movie")
+    private List<RatingEntity> ratings;
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

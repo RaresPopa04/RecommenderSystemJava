@@ -19,6 +19,6 @@ public class MovieGenreEntity {
     @Column(name = "genre", nullable = false)
     private String genre;
 
-    @Column(name = "createAt", nullable = false)
-    private LocalDateTime createAt = LocalDateTime.now();
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

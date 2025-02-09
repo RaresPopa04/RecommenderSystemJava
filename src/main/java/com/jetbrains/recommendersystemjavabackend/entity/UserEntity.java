@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "users")
 public class UserEntity {
 
     @Id
@@ -21,6 +22,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<UserPreferenceEntity> preferredGenres;
+
+    @OneToMany(mappedBy = "user")
+    private List<RatingEntity> ratings;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

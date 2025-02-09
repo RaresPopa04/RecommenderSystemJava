@@ -1,6 +1,26 @@
 spring:
   application:
     name: Recommender-System
+  flyway:
+    locations: classpath:db/migration
+    url: jdbc:postgresql://localhost:5433/postgres
+    user: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url : jdbc:postgresql://localhost:5433/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
 
 server:
   port: 8081

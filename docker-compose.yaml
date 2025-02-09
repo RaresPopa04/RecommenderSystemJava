@@ -1,14 +1,16 @@
 version: '3.8'
 
 services:
-  oracle:
-    image: container-registry.oracle.com/database/express:latest
-    container_name: oracle_db
-    ports:
-      - '1521:1521'
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     environment:
-      - ORACLE_PWD=pass
-      - ORACLE_CHARACTERSET=AL32UTF8
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+#      my local application pgAdmin application was running on port 5432, so I had to change the port to 5433
+      - '5433:5432'
 
   zookeeper:
     image: bitnami/zookeeper:latest
