@@ -1,0 +1,258 @@
+openapi: 3.0.3
+info:
+  title: My Recommender API
+  version: 1.0.0
+servers:
+  - url: /api
+
+paths:
+  /movies:
+    get:
+      summary: Get all movies
+      responses:
+        200:
+          description: All movies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieList"
+    post:
+      summary: Create a new movie(admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MovieCreate"
+      responses:
+        201:
+          description: Created a new movie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+
+  /movies/{id}:
+    get:
+      summary: Get a movie by id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A movie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+    put:
+      summary: Update a movie by id(admin only)
+      requestBody:
+        description: Movie object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Updated a movie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+    delete:
+      summary: Delete a movie by id(admin only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Deleted a movie
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+
+  /ratings/{userId}/{movieId}:
+    get:
+      summary: Get a rating by user id and movie id
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: A rating
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rating"
+    put:
+      summary: Update a rating by user id and movie id
+      requestBody:
+        description: Rating object that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Rating"
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Updated a rating
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rating"
+    delete:
+      summary: Delete a rating by user id and movie id
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: Deleted a rating
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Rating"
+  /users:
+    get:
+      summary: Get all users
+      responses:
+        200:
+          description: All users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserList"
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/User"
+      responses:
+        201:
+          description: Created a new user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  /recommendations/{userId}:
+    get:
+      summary: Get movie recommendations for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Movie recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovieList"
+
+
+
+
+
+components:
+  schemas:
+    Rating:
+        type: object
+        properties:
+          userId:
+            type: integer
+          movieId:
+            type: integer
+          rating:
+            type: integer
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+    UserList:
+      type: array
+      items:
+        $ref: "#/components/schemas/User"
+
+    MovieCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        genres:
+          type: array
+          items:
+            type: string
+      required:
+        - title
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        genres:
+          type: array
+          items:
+            type: string
+    MovieList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Movie"
