@@ -154,6 +154,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Rating"
+
   /users:
     get:
       summary: Get all users
@@ -171,7 +172,7 @@ paths:
         content:
           application/json:
             schema:
-                $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/User"
       responses:
         201:
           description: Created a new user
@@ -196,6 +197,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/MovieList"
+
+  /upload-movies:
+    post:
+      description: Upload movies from a csv file(admin only)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                movieGenres:
+                  type: string
+                  format: binary
+                movieImdbIds:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Uploaded movies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
+
+  /upload-users:
+    post:
+      description: Upload users from a csv file(admin only)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Uploaded users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
 
 
 
@@ -256,3 +302,18 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Movie"
+    Error:
+      type: object
+      properties:
+        id:
+          type: integer
+        message:
+          type: string
+    UploadResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+              $ref: "#/components/schemas/Error"
+

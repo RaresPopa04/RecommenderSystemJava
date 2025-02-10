@@ -1,0 +1,51 @@
+package com.jetbrains.recommendersystemjavabackend.controller;
+
+import com.jetbrains.recommendersystemjavabackend.api.UploadMoviesApi;
+import com.jetbrains.recommendersystemjavabackend.model.Error;
+import com.jetbrains.recommendersystemjavabackend.model.UploadResponse;
+import com.jetbrains.recommendersystemjavabackend.service.DataImportService;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.List;
+
+@RestController
+public class MovieImportController implements UploadMoviesApi {
+
+    private final DataImportService dataImportService;
+
+    public MovieImportController(DataImportService dataImportService) {
+        this.dataImportService = dataImportService;
+    }
+
+    @Override
+    public ResponseEntity<UploadResponse> uploadMoviesPost(MultipartFile movieGenres, MultipartFile movieImdbIds) {
+        try (Reader in = new InputStreamReader(movieGenres.getInputStream())) {
+            Iterable<CSVRecord> movieGenresRecords = CSVFormat.DEFAULT.builder()
+                    .setHeader()
+                    .setSkipHeaderRecord(true)
+                    .build().parse(in);
+            try(Reader in2 = new InputStreamReader(movieImdbIds.getInputStream())){
+                Iterable<CSVRecord> imdbIdRecords = CSVFormat.DEFAULT.builder()
+                        .setHeader()
+                        .setSkipHeaderRecord(true)
+                        .build().parse(in2);
+
+                UploadResponse uploadResponse = new UploadResponse();
+                dataImportService.importMovies(movieGenresRecords, imdbIdRecords, uploadResponse.getErrors());
+                return ResponseEntity.ok(uploadResponse);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+}
