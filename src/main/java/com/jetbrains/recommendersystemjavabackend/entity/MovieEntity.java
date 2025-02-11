@@ -1,5 +1,6 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
+import com.jetbrains.recommendersystemjavabackend.model.Movie;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -94,5 +95,13 @@ public class MovieEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Movie toMovie() {
+        Movie movie = new Movie();
+        movie.setId(id);
+        movie.setTitle(title);
+        movie.genres(genres.stream().map(GenreEntity::getName).toList());
+        return movie;
     }
 }
