@@ -15,4 +15,12 @@ public class GenreEntity {
     @Id
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

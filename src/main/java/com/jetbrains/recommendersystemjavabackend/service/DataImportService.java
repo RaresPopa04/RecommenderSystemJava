@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,15 +23,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
 public class DataImportService {
 
     private static final int BATCH_SIZE = 100;
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(DataImportService.class);
     private final GenreRepository genreRepository;
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
+
+    public DataImportService(GenreRepository genreRepository, MovieRepository movieRepository, UserRepository userRepository, RatingRepository ratingRepository) {
+        this.genreRepository = genreRepository;
+        this.movieRepository = movieRepository;
+        this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
+    }
 
     @Transactional
     public void importMovies(Iterable<CSVRecord> movieGenreRecords, Iterable<CSVRecord> imdbIdRecords, List<Error> errors) {
