@@ -102,6 +102,7 @@ public class MovieEntity {
         movie.setId(id);
         movie.setTitle(title);
         movie.genres(genres.stream().map(GenreEntity::getName).toList());
+        movie.setImdbId(imdbId);
         return movie;
     }
 }
