@@ -2,6 +2,7 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "movies")
 @Data
+@ToString
 public class MovieEntity {
 
     @Id

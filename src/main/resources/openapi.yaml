@@ -242,7 +242,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UploadResponse"
-
+  /upload-ratings:
+    post:
+      description: Upload ratings from a csv file(admin only)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        201:
+          description: Uploaded ratings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadResponse"
 
 
 

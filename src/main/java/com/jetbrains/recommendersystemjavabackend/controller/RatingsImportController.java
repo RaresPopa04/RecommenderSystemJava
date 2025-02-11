@@ -1,6 +1,6 @@
 package com.jetbrains.recommendersystemjavabackend.controller;
 
-import com.jetbrains.recommendersystemjavabackend.api.UploadUsersApi;
+import com.jetbrains.recommendersystemjavabackend.api.UploadRatingsApi;
 import com.jetbrains.recommendersystemjavabackend.model.UploadResponse;
 import com.jetbrains.recommendersystemjavabackend.service.DataImportService;
 import org.apache.commons.csv.CSVFormat;
@@ -14,24 +14,24 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 @RestController
-public class UserImportController implements UploadUsersApi {
+public class RatingsImportController implements UploadRatingsApi {
 
     private final DataImportService dataImportService;
 
-    public UserImportController(DataImportService dataImportService) {
+    public RatingsImportController(DataImportService dataImportService) {
         this.dataImportService = dataImportService;
     }
 
     @Override
-    public ResponseEntity<UploadResponse> uploadUsersPost(MultipartFile users) {
-        try (Reader in = new InputStreamReader(users.getInputStream())) {
-            Iterable<CSVRecord> userRecords = CSVFormat.DEFAULT.builder()
+    public ResponseEntity<UploadResponse> uploadRatingsPost(MultipartFile ratings) {
+        try (Reader in = new InputStreamReader(ratings.getInputStream())) {
+            Iterable<CSVRecord> ratingRecords = CSVFormat.DEFAULT.builder()
                     .setHeader()
                     .setSkipHeaderRecord(true)
                     .build().parse(in);
 
             UploadResponse uploadResponse = new UploadResponse();
-            dataImportService.importUsers(userRecords, uploadResponse.getErrors());
+            dataImportService.importRatings(ratingRecords, uploadResponse.getErrors());
             return ResponseEntity.ok(uploadResponse);
 
         } catch (IOException e) {

@@ -2,11 +2,13 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Data
+@ToString
 @Table(name = "ratings")
 public class RatingEntity {
 

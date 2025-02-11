@@ -3,12 +3,14 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Data
+@ToString
 @Table(name = "users")
 public class UserEntity {
 

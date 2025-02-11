@@ -17,10 +17,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class DataImportService {
@@ -50,7 +47,7 @@ public class DataImportService {
                 MovieEntity movie = parseMovie(record, movieToImdb, genreMap);
                 movies.add(movie);
 
-                log.info("Parsed movie: {}", movie);
+                log.debug("Parsed movie: {}", movie);
 
                 if (movies.size() >= BATCH_SIZE) {
                     movieRepository.saveAll(movies);
@@ -70,16 +67,21 @@ public class DataImportService {
 
     @Transactional
     public void importUsers(Iterable<CSVRecord> userRecords, List<Error> errors) {
+        HashSet<Integer> fileIdsInserted = new HashSet<>();
         List<UserEntity> users = new ArrayList<>();
         for (CSVRecord record : userRecords) {
             try {
+                if (fileIdsInserted.contains(Integer.valueOf(record.get("userId")))) {
+                    continue;
+                }
                 UserEntity user = new UserEntity();
                 user.setFileId(Long.valueOf(record.get("userId")));
+                fileIdsInserted.add(Integer.valueOf(record.get("userId")));
                 user.setUsername(record.get("userId") + "_user");
                 user.setPassword("password");
                 users.add(user);
 
-                log.info("Parsed user: {}", user);
+                log.debug("Parsed user: {}", user);
 
                 if (users.size() >= BATCH_SIZE) {
                     userRepository.saveAll(users);
@@ -91,30 +93,41 @@ public class DataImportService {
                 errors.add(new Error().id(Integer.valueOf(record.get("userId"))).message(e.getMessage()));
             }
         }
+
+        if(!users.isEmpty()){
+            userRepository.saveAll(users);
+        }
     }
 
-    private void importGenres(Iterable<CSVRecord> genreRecords, List<Error> errors) {
+    @Transactional
+    public void importRatings(Iterable<CSVRecord> ratingRecords, List<Error> errors) {
         List<RatingEntity> ratingEntities = new ArrayList<>();
-        for(CSVRecord record : genreRecords){
+        HashMap<Long, UserEntity> userMap = getUserMap();
+        int count = 0;
+        HashMap<Long, MovieEntity> movieMap = getMovieMap();
+        for(CSVRecord record : ratingRecords){
             try{
                 RatingEntity ratingEntity = new RatingEntity();
                 Long userId = Long.valueOf(record.get("userId"));
                 Long movieId = Long.valueOf(record.get("movieId"));
-                Optional<UserEntity> user = userRepository.findByFileId(userId);
-                Optional<MovieEntity> movie = movieRepository.findByFileId(movieId);
-                if(user.isEmpty()){
-                    errors.add(new Error().id(userId.intValue()).message("User not found"));
+
+                if(!userMap.containsKey(userId)){
+                    errors.add(new Error().id(Integer.valueOf(record.get("userId"))).message("User not found"));
                     continue;
                 }
-                if(movie.isEmpty()){
-                    errors.add(new Error().id(movieId.intValue()).message("Movie not found"));
+                if(!movieMap.containsKey(movieId)){
+                    errors.add(new Error().id(Integer.valueOf(record.get("movieId"))).message("Movie not found"));
                     continue;
                 }
-                ratingEntity.setUser(user.get());
-                ratingEntity.setMovie(movie.get());
+                ratingEntity.setUser(userMap.get(userId));
+                ratingEntity.setMovie(movieMap.get(movieId));
+                ratingEntity.setRating(Double.valueOf(record.get("rating")));
 
                 ratingEntities.add(ratingEntity);
-                log.info("Parsed rating: {}", ratingEntity);
+
+                count++;
+                log.debug("Parsed rating: {}, with count: {}", ratingEntity, count);
+                log.info("Count: {}", count);
                 if(ratingEntities.size() >= BATCH_SIZE){
                     ratingRepository.saveAll(ratingEntities);
                     ratingRepository.flush();
@@ -124,7 +137,24 @@ public class DataImportService {
                 errors.add(new Error().id(Integer.valueOf(record.get("userId"))).message(e.getMessage()));
             }
         }
+
+        if(!ratingEntities.isEmpty()){
+            ratingRepository.saveAll(ratingEntities);
+        }
     }
+
+    private HashMap<Long, MovieEntity> getMovieMap() {
+        HashMap<Long, MovieEntity> movieMap = new HashMap<>();
+        movieRepository.findAll().forEach(movie -> movieMap.put(movie.getFileId(), movie));
+        return movieMap;
+    }
+
+    private HashMap<Long, UserEntity> getUserMap() {
+        HashMap<Long, UserEntity> userMap = new HashMap<>();
+        userRepository.findAll().forEach(user -> userMap.put(user.getFileId(), user));
+        return userMap;
+    }
+
 
     private void parseGenres(CSVRecord record, HashMap<String, GenreEntity> genreMap) {
         if (record.get("genres").isEmpty()) {
