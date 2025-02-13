@@ -70,10 +70,10 @@ public class MovieService {
 
     public Movie createMovie(Movie movie) {
         if(movieRepository.existsByImdbId(movie.getImdbId())){
-            throw new IllegalArgumentException("Movie already exists");
+            throw new IllegalArgumentException("Movie imdb already exists");
         }
         if(movieRepository.existsByTitle(movie.getTitle())){
-            throw new IllegalArgumentException("Movie already exists");
+            throw new IllegalArgumentException("Movie title already exists");
         }
 
         MovieEntity movieEntity = new MovieEntity();

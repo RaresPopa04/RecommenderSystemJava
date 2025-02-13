@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<RatingEntity, Long> {
 
     Optional<RatingEntity> findByUserIdAndMovieId(Long user_id, Long movie_id);
+    boolean existsByUserIdAndMovieId(Long user_id, Long movie_id);
 }

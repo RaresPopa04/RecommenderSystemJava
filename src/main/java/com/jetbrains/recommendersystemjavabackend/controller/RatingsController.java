@@ -3,6 +3,7 @@ package com.jetbrains.recommendersystemjavabackend.controller;
 import com.jetbrains.recommendersystemjavabackend.api.RatingsApi;
 import com.jetbrains.recommendersystemjavabackend.entity.RatingEntity;
 import com.jetbrains.recommendersystemjavabackend.model.Rating;
+import com.jetbrains.recommendersystemjavabackend.model.RatingPut;
 import com.jetbrains.recommendersystemjavabackend.repository.RatingRepository;
 import com.jetbrains.recommendersystemjavabackend.service.RatingService;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +41,16 @@ public class RatingsController implements RatingsApi {
     }
 
     @Override
-    public ResponseEntity<Rating> ratingsUserIdMovieIdPut(Long userId, Long movieId, Rating rating) {
+    public ResponseEntity<Rating> ratingsUserIdMovieIdPut(Long userId, Long movieId, RatingPut rating) {
         Optional<RatingEntity> ratingEntity = ratingsRepository.findByUserIdAndMovieId(userId, movieId);
         if (ratingEntity.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(ratingService.updateRating(userId, movieId, rating).toRating());
+    }
+
+    @Override
+    public ResponseEntity<Rating> ratingsPost(Rating rating) {
+        return ResponseEntity.ok(ratingService.createRating(rating));
     }
 }

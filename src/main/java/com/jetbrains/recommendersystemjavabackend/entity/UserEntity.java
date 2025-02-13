@@ -3,11 +3,15 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
 @Data
 @ToString
@@ -38,60 +42,4 @@ public class UserEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(Long fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public List<GenreEntity> getPreferredGenres() {
-        return preferredGenres;
-    }
-
-    public void setPreferredGenres(List<GenreEntity> preferredGenres) {
-        this.preferredGenres = preferredGenres;
-    }
-
-    public List<RatingEntity> getRatings() {
-        return ratings;
-    }
-
-    public void setRatings(List<RatingEntity> ratings) {
-        this.ratings = ratings;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
 }

@@ -142,7 +142,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Rating"
+              $ref: "#/components/schemas/RatingPut"
       responses:
         200:
           description: Updated a rating
@@ -169,21 +169,10 @@ paths:
         204:
           description: Deleted a rating
           content: {}
+
+  /ratings:
     post:
       summary: Create a rating by user id and movie id
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: movieId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
       requestBody:
         description: Rating object that needs to be created
         required: true
@@ -325,6 +314,14 @@ components:
       required:
         - userId
         - movieId
+        - rating
+    RatingPut:
+      type: object
+      properties:
+        rating:
+          type: number
+          format: double
+      required:
         - rating
 
     User:

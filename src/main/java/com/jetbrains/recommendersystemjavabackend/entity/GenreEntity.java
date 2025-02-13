@@ -1,10 +1,10 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "genres")
 @ToString
@@ -16,11 +16,4 @@ public class GenreEntity {
     @Column(name = "name", nullable = false, length = 255)
     private String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
