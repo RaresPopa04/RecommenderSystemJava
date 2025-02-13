@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<MovieEntity, Long> {
     Optional<MovieEntity> findByFileId(Long fileId);
     Page<MovieEntity> findAll(Pageable pageable);
+    boolean existsByTitle(String title);
+    boolean existsByImdbId(String imdbId);
 }

@@ -1,5 +1,6 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
+import com.jetbrains.recommendersystemjavabackend.model.Rating;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.ToString;
@@ -68,5 +69,13 @@ public class RatingEntity {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Rating toRating() {
+        Rating rating = new Rating();
+        rating.setRating(this.rating);
+        rating.setUserId(this.user.getId());
+        rating.setMovieId(this.movie.getId());
+        return rating;
     }
 }

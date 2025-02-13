@@ -171,6 +171,7 @@
                             <configOptions>
                                 <dateLibrary>java21</dateLibrary>
                                 <java8>true</java8>
+                                <interfaceOnly>true</interfaceOnly>
                             </configOptions>
                         </configuration>
                     </execution>

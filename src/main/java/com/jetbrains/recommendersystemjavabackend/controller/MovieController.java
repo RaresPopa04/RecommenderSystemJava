@@ -21,8 +21,7 @@ public class MovieController implements MoviesApi {
     }
 
     @Override
-    public ResponseEntity<MoviePage> moviesGet(Integer page, Integer size
-    ) {
+    public ResponseEntity<MoviePage> moviesGet(Integer page, Integer size) {
 
         Page<MovieEntity> movieEntityPage = movieService.getAllMovies(page, size);
         MoviePage moviePage = new MoviePage();
@@ -31,6 +30,11 @@ public class MovieController implements MoviesApi {
         moviePage.setTotalElements((int) movieEntityPage.getTotalElements());
 
         return ResponseEntity.ok(moviePage);
+    }
+
+    @Override
+    public ResponseEntity<Movie> moviesPost(Movie movie) {
+        return ResponseEntity.ok(movieService.createMovie(movie));
     }
 
     @Override

@@ -43,21 +43,51 @@ public class MovieService {
         if (movieEntity.isEmpty()) {
             return null;
         }
-        MovieEntity updatedMovieEntity = movieEntity.get();
-        updatedMovieEntity.setTitle(movie.getTitle());
-        updatedMovieEntity.setImdbId(movie.getImdbId());
-        updatedMovieEntity.setImdbId(movie.getImdbId());
 
-        for(String genre : movie.getGenres()){
+        if(movieRepository.existsByImdbId(movie.getImdbId()) && !movieEntity.get().getImdbId().equals(movie.getImdbId())){
+            throw new IllegalArgumentException("Movie imdb already exists");
+        }
+
+        if(movieRepository.existsByTitle(movie.getTitle()) && !movieEntity.get().getTitle().equals(movie.getTitle())){
+            throw new IllegalArgumentException("Movie title already exists");
+        }
+
+        MovieEntity currentMovieEntity = movieEntity.get();
+        currentMovieEntity.setTitle(movie.getTitle());
+        currentMovieEntity.setImdbId(movie.getImdbId());
+
+        movie.getGenres().forEach(genre -> {
             Optional<GenreEntity> foundGenre = genreRepository.findById(genre);
             if(foundGenre.isEmpty()){
                 throw new IllegalArgumentException("Genre not found");
             }
-        }
-        updatedMovieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
-        updatedMovieEntity.setRatings(movieEntity.get().getRatings());
-        movieRepository.save(updatedMovieEntity);
-        return updatedMovieEntity.toMovie();
+        });
 
+        currentMovieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
+        return movieRepository.save(currentMovieEntity).toMovie();
+
+    }
+
+    public Movie createMovie(Movie movie) {
+        if(movieRepository.existsByImdbId(movie.getImdbId())){
+            throw new IllegalArgumentException("Movie already exists");
+        }
+        if(movieRepository.existsByTitle(movie.getTitle())){
+            throw new IllegalArgumentException("Movie already exists");
+        }
+
+        MovieEntity movieEntity = new MovieEntity();
+        movieEntity.setTitle(movie.getTitle());
+        movieEntity.setImdbId(movie.getImdbId());
+
+        movie.getGenres().forEach(genre -> {
+            Optional<GenreEntity> foundGenre = genreRepository.findById(genre);
+            if(foundGenre.isEmpty()){
+                throw new IllegalArgumentException("Genre not found");
+            }
+        });
+
+        movieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
+        return movieRepository.save(movieEntity).toMovie();
     }
 }
