@@ -1,0 +1,19 @@
+{
+  "type": "record",
+  "namespace": "com.recommender_system.schema",
+  "name": "Rating",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "long"
+    },
+    {
+      "name": "movieId",
+      "type": "long"
+    },
+    {
+      "name": "ratingValue",
+      "type": "double"
+    }
+  ]
+}

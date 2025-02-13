@@ -29,6 +29,16 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
 
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      schema:
+        registry:
+          url: http://localhost:8081
+      specific:
+        avro:
+          reader: true
+
 
 server:
   port: 8089

@@ -1,0 +1,26 @@
+{
+  "type": "record",
+  "namespace": "com.recommender_system.schema",
+  "name": "Movie",
+  "fields": [
+    {
+      "name": "movieId",
+      "type": "long"
+    },
+    {
+      "name": "title",
+      "type": "string",
+    },
+    {
+      "name": "imdbId",
+      "type": "string"
+    },
+    {
+      "name": "genres",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    }
+  ]
+}

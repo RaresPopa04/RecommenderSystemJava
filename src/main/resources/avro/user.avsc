@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "namespace": "com.recommender_system.schema",
+  "name": "User",
+  "fields": [
+    {
+      "name": "userId",
+      "type": "long"
+    },
+    {
+      "name": "preferredGenres",
+      "type": {
+        "type": "array",
+        "items": "string"
+      }
+    }
+  ]
+}
