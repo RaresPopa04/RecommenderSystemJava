@@ -1,6 +1,7 @@
 package com.jetbrains.recommendersystemjavabackend.config;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +25,7 @@ public class KafkaAvroConfig {
     private String schemaRegistryUrl;
 
     @Bean
-    public ProducerFactory<String, GenericRecord> avroProducerFactory(){
+    public ProducerFactory<String, SpecificRecord> avroProducerFactory(){
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put("schema.registry.url", schemaRegistryUrl);
@@ -34,7 +35,7 @@ public class KafkaAvroConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, GenericRecord> avroKafkaTemplate(){
+    public KafkaTemplate<String, SpecificRecord> avroKafkaTemplate(){
         return new KafkaTemplate<>(avroProducerFactory());
     }
 

@@ -1,6 +1,7 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
 
+import com.jetbrains.recommendersystemjavabackend.model.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class UserEntity {
     @Column(name = "file_id", unique = true)
     private Long fileId;
 
-    @Column(name = "username", nullable = false, unique = true, length = 100)
+        @Column(name = "username", nullable = false, unique = true, length = 100)
     private String username;
 
     @Column(name = "password", nullable = false, length = 255)
@@ -42,4 +43,18 @@ public class UserEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    public static UserEntity toEntity(User user) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(user.getId());
+        userEntity.setUsername(user.getUsername());
+        return userEntity;
+    }
+
+    public User fromEntity() {
+        User user = new User();
+        user.setId(this.id);
+        user.setUsername(this.username);
+        return user;
+    }
 }

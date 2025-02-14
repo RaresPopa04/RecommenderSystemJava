@@ -3,26 +3,26 @@ package com.jetbrains.recommendersystemjavabackend.service;
 
 import com.jetbrains.recommendersystemjavabackend.entity.GenreEntity;
 import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
+import com.jetbrains.recommendersystemjavabackend.kafka.AvroProducerService;
 import com.jetbrains.recommendersystemjavabackend.model.Movie;
 import com.jetbrains.recommendersystemjavabackend.repository.GenreRepository;
 import com.jetbrains.recommendersystemjavabackend.repository.MovieRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MovieService {
 
     private final MovieRepository movieRepository;
     private final GenreRepository genreRepository;
-
-    public MovieService(MovieRepository movieRepository, GenreRepository genreRepository) {
-        this.movieRepository = movieRepository;
-        this.genreRepository = genreRepository;
-    }
+    private final AvroProducerService avroProducerService;
 
     public Page<MovieEntity> getAllMovies(int page, int size) {
         return movieRepository.findAll(PageRequest.of(page, size));
@@ -63,6 +63,7 @@ public class MovieService {
             }
         });
 
+        avroProducerService.sendMovieEvent(currentMovieEntity.getFileId(), currentMovieEntity.getTitle(), movie.getGenres());
         currentMovieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
         return movieRepository.save(currentMovieEntity).toMovie();
 
@@ -79,6 +80,7 @@ public class MovieService {
         MovieEntity movieEntity = new MovieEntity();
         movieEntity.setTitle(movie.getTitle());
         movieEntity.setImdbId(movie.getImdbId());
+        movieEntity.setFileId(movieRepository.findMaxId() + 1);
 
         movie.getGenres().forEach(genre -> {
             Optional<GenreEntity> foundGenre = genreRepository.findById(genre);
@@ -88,6 +90,8 @@ public class MovieService {
         });
 
         movieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
-        return movieRepository.save(movieEntity).toMovie();
+        Movie saved = movieRepository.save(movieEntity).toMovie();
+        avroProducerService.sendMovieEvent(movieEntity.getFileId(), movieEntity.getTitle(), movie.getGenres());
+        return  saved;
     }
 }

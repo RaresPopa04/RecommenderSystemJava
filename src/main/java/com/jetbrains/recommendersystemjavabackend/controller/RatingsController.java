@@ -46,7 +46,7 @@ public class RatingsController implements RatingsApi {
         if (ratingEntity.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(ratingService.updateRating(userId, movieId, rating).toRating());
+        return ResponseEntity.ok(ratingService.updateRating(userId, movieId, rating));
     }
 
     @Override

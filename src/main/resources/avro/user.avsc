@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "namespace": "com.recommender_system.schema",
+  "namespace": "com.jetbrains.recommendersystemjavabackend.avro",
   "name": "User",
   "fields": [
     {

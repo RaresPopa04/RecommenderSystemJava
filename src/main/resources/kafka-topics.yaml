@@ -1,0 +1,5 @@
+app:
+  kafka:
+    user-topic: user-events
+    movie-topic: movie-events
+    rating-topic: rating-events
