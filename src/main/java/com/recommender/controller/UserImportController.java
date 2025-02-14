@@ -1,8 +1,8 @@
-package com.jetbrains.recommendersystemjavabackend.controller;
+package com.recommender.controller;
 
-import com.jetbrains.recommendersystemjavabackend.api.UploadUsersApi;
-import com.jetbrains.recommendersystemjavabackend.model.UploadResponse;
-import com.jetbrains.recommendersystemjavabackend.service.DataImportService;
+import com.recommender.api.UploadUsersApi;
+import com.recommender.model.UploadResponse;
+import com.recommender.service.DataImportService;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.http.ResponseEntity;

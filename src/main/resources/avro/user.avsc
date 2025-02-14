@@ -1,6 +1,7 @@
 {
   "type": "record",
-  "namespace": "com.jetbrains.recommendersystemjavabackend.avro",
+//  where the file is located in the generated Java code
+  "namespace": "com.recommender.avro",
   "name": "User",
   "fields": [
     {

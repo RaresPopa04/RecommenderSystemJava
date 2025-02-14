@@ -1,4 +1,4 @@
-package com.jetbrains.recommendersystemjavabackend.entity;
+package com.recommender.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

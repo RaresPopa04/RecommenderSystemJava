@@ -1,15 +1,15 @@
-package com.jetbrains.recommendersystemjavabackend.service;
+package com.recommender.service;
 
 
-import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.RatingEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.UserEntity;
-import com.jetbrains.recommendersystemjavabackend.kafka.AvroProducerService;
-import com.jetbrains.recommendersystemjavabackend.model.Rating;
-import com.jetbrains.recommendersystemjavabackend.model.RatingPut;
-import com.jetbrains.recommendersystemjavabackend.repository.MovieRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.RatingRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.UserRepository;
+import com.recommender.entity.MovieEntity;
+import com.recommender.entity.RatingEntity;
+import com.recommender.entity.UserEntity;
+import com.recommender.kafka.AvroProducerService;
+import com.recommender.model.Rating;
+import com.recommender.model.RatingPut;
+import com.recommender.repository.MovieRepository;
+import com.recommender.repository.RatingRepository;
+import com.recommender.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

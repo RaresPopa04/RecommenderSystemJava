@@ -1,11 +1,11 @@
-package com.jetbrains.recommendersystemjavabackend.controller;
+package com.recommender.controller;
 
-import com.jetbrains.recommendersystemjavabackend.api.RatingsApi;
-import com.jetbrains.recommendersystemjavabackend.entity.RatingEntity;
-import com.jetbrains.recommendersystemjavabackend.model.Rating;
-import com.jetbrains.recommendersystemjavabackend.model.RatingPut;
-import com.jetbrains.recommendersystemjavabackend.repository.RatingRepository;
-import com.jetbrains.recommendersystemjavabackend.service.RatingService;
+import com.recommender.api.RatingsApi;
+import com.recommender.entity.RatingEntity;
+import com.recommender.model.Rating;
+import com.recommender.model.RatingPut;
+import com.recommender.repository.RatingRepository;
+import com.recommender.service.RatingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

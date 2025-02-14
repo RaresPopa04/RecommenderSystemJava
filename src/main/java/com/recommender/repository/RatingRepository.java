@@ -1,6 +1,6 @@
-package com.jetbrains.recommendersystemjavabackend.repository;
+package com.recommender.repository;
 
-import com.jetbrains.recommendersystemjavabackend.entity.RatingEntity;
+import com.recommender.entity.RatingEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

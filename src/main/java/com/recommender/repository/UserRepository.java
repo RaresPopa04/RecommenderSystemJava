@@ -1,9 +1,8 @@
-package com.jetbrains.recommendersystemjavabackend.repository;
+package com.recommender.repository;
 
-import com.jetbrains.recommendersystemjavabackend.entity.UserEntity;
+import com.recommender.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.stereotype.Repository;
 
 import javax.validation.constraints.NotNull;

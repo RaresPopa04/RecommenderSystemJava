@@ -1,10 +1,10 @@
-package com.jetbrains.recommendersystemjavabackend.controller;
+package com.recommender.controller;
 
-import com.jetbrains.recommendersystemjavabackend.api.UsersApi;
-import com.jetbrains.recommendersystemjavabackend.model.User;
-import com.jetbrains.recommendersystemjavabackend.model.UserPage;
-import com.jetbrains.recommendersystemjavabackend.model.UserPut;
-import com.jetbrains.recommendersystemjavabackend.service.UserService;
+import com.recommender.api.UsersApi;
+import com.recommender.model.User;
+import com.recommender.model.UserPage;
+import com.recommender.model.UserPut;
+import com.recommender.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

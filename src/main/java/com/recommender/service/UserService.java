@@ -1,20 +1,18 @@
-package com.jetbrains.recommendersystemjavabackend.service;
+package com.recommender.service;
 
-import com.jetbrains.recommendersystemjavabackend.entity.GenreEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.UserEntity;
-import com.jetbrains.recommendersystemjavabackend.kafka.AvroProducerService;
-import com.jetbrains.recommendersystemjavabackend.model.User;
-import com.jetbrains.recommendersystemjavabackend.model.UserPage;
-import com.jetbrains.recommendersystemjavabackend.model.UserPut;
-import com.jetbrains.recommendersystemjavabackend.repository.GenreRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.UserRepository;
+import com.recommender.entity.GenreEntity;
+import com.recommender.entity.UserEntity;
+import com.recommender.kafka.AvroProducerService;
+import com.recommender.model.User;
+import com.recommender.model.UserPage;
+import com.recommender.model.UserPut;
+import com.recommender.repository.GenreRepository;
+import com.recommender.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

@@ -1,12 +1,10 @@
-package com.jetbrains.recommendersystemjavabackend.entity;
+package com.recommender.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jetbrains.recommendersystemjavabackend.model.Rating;
+import com.recommender.model.Rating;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;

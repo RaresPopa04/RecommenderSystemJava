@@ -1,13 +1,13 @@
-package com.jetbrains.recommendersystemjavabackend.service;
+package com.recommender.service;
 
 
-import com.jetbrains.recommendersystemjavabackend.entity.GenreEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
-import com.jetbrains.recommendersystemjavabackend.kafka.AvroProducerService;
-import com.jetbrains.recommendersystemjavabackend.model.Movie;
-import com.jetbrains.recommendersystemjavabackend.model.MoviePage;
-import com.jetbrains.recommendersystemjavabackend.repository.GenreRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.MovieRepository;
+import com.recommender.entity.GenreEntity;
+import com.recommender.entity.MovieEntity;
+import com.recommender.kafka.AvroProducerService;
+import com.recommender.model.Movie;
+import com.recommender.model.MoviePage;
+import com.recommender.repository.GenreRepository;
+import com.recommender.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

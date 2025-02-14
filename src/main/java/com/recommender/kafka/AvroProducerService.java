@@ -1,9 +1,9 @@
-package com.jetbrains.recommendersystemjavabackend.kafka;
+package com.recommender.kafka;
 
 
-import com.jetbrains.recommendersystemjavabackend.avro.Movie;
-import com.jetbrains.recommendersystemjavabackend.avro.Rating;
-import com.jetbrains.recommendersystemjavabackend.avro.User;
+import com.recommender.avro.Movie;
+import com.recommender.avro.Rating;
+import com.recommender.avro.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.avro.specific.SpecificRecord;
 import org.springframework.beans.factory.annotation.Value;

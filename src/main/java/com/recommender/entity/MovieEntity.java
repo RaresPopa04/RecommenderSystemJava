@@ -1,11 +1,9 @@
-package com.jetbrains.recommendersystemjavabackend.entity;
+package com.recommender.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.jetbrains.recommendersystemjavabackend.model.Movie;
+import com.recommender.model.Movie;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;

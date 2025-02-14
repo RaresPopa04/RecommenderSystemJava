@@ -1,9 +1,9 @@
-package com.jetbrains.recommendersystemjavabackend.controller;
+package com.recommender.controller;
 
-import com.jetbrains.recommendersystemjavabackend.api.MoviesApi;
-import com.jetbrains.recommendersystemjavabackend.model.Movie;
-import com.jetbrains.recommendersystemjavabackend.model.MoviePage;
-import com.jetbrains.recommendersystemjavabackend.service.MovieService;
+import com.recommender.api.MoviesApi;
+import com.recommender.model.Movie;
+import com.recommender.model.MoviePage;
+import com.recommender.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 

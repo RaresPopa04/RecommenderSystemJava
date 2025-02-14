@@ -1,18 +1,16 @@
-package com.jetbrains.recommendersystemjavabackend.service;
+package com.recommender.service;
 
 
-import com.jetbrains.recommendersystemjavabackend.entity.GenreEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.RatingEntity;
-import com.jetbrains.recommendersystemjavabackend.entity.UserEntity;
-import com.jetbrains.recommendersystemjavabackend.model.Error;
-import com.jetbrains.recommendersystemjavabackend.repository.GenreRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.MovieRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.RatingRepository;
-import com.jetbrains.recommendersystemjavabackend.repository.UserRepository;
+import com.recommender.entity.GenreEntity;
+import com.recommender.entity.MovieEntity;
+import com.recommender.entity.RatingEntity;
+import com.recommender.entity.UserEntity;
+import com.recommender.model.Error;
+import com.recommender.repository.GenreRepository;
+import com.recommender.repository.MovieRepository;
+import com.recommender.repository.RatingRepository;
+import com.recommender.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;

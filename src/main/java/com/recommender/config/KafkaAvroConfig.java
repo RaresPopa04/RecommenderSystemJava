@@ -1,4 +1,4 @@
-package com.jetbrains.recommendersystemjavabackend.config;
+package com.recommender.config;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.avro.specific.SpecificRecord;

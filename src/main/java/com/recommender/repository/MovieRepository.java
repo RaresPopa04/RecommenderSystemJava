@@ -1,6 +1,6 @@
-package com.jetbrains.recommendersystemjavabackend.repository;
+package com.recommender.repository;
 
-import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
+import com.recommender.entity.MovieEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
