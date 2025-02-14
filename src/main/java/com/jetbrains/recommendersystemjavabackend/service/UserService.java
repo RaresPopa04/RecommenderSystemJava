@@ -52,7 +52,7 @@ public class UserService {
         //TODO repair password
         userEntity.setPassword(UUID.randomUUID().toString());
         User saved = userRepository.save(userEntity).fromEntity();
-//        avroProducerService.sendUserEvent(userEntity.getFileId(), List.of());
+        avroProducerService.sendUserEvent(userEntity.getFileId(), user.getGenres());
         return saved;
     }
 
@@ -78,7 +78,7 @@ public class UserService {
         currentUserEntity.setPreferredGenres(genreRepository.findAllById(user.getGenres()));
 
         User saved = userRepository.save(currentUserEntity).fromEntity();
-//        avroProducerService.sendUserEvent(currentUserEntity.getFileId(), List.of());
+        avroProducerService.sendUserEvent(currentUserEntity.getFileId(), user.getGenres());
         return saved;
     }
 
