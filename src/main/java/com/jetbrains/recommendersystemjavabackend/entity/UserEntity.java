@@ -1,7 +1,10 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jetbrains.recommendersystemjavabackend.model.User;
+import com.jetbrains.recommendersystemjavabackend.model.UserPut;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -11,8 +14,6 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
 @Entity
 @Data
 @ToString
@@ -26,7 +27,7 @@ public class UserEntity {
     @Column(name = "file_id", unique = true)
     private Long fileId;
 
-        @Column(name = "username", nullable = false, unique = true, length = 100)
+    @Column(name = "username", nullable = false, unique = true, length = 100)
     private String username;
 
     @Column(name = "password", nullable = false, length = 255)
@@ -36,25 +37,23 @@ public class UserEntity {
             @JoinTable(name = "user_to_genre",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_name"))
+            @JsonManagedReference
     List<GenreEntity> preferredGenres;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<RatingEntity> ratings;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public static UserEntity toEntity(User user) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(user.getId());
-        userEntity.setUsername(user.getUsername());
-        return userEntity;
-    }
 
     public User fromEntity() {
         User user = new User();
         user.setId(this.id);
         user.setUsername(this.username);
+        user.setFileId(this.fileId);
+        user.setGenres(preferredGenres.stream().map(GenreEntity::getName).toList());
         return user;
     }
 }

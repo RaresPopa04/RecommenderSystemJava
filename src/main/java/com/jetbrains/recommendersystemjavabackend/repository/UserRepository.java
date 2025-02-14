@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.expression.spel.ast.OpInc;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +15,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query("SELECT max(user.fileId) from UserEntity user")
     Long findMaxFileId();
+
+    boolean existsByUsername(@NotNull String username);
 }

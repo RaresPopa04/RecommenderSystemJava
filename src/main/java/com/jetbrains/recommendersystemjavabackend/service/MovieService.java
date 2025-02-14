@@ -5,15 +5,14 @@ import com.jetbrains.recommendersystemjavabackend.entity.GenreEntity;
 import com.jetbrains.recommendersystemjavabackend.entity.MovieEntity;
 import com.jetbrains.recommendersystemjavabackend.kafka.AvroProducerService;
 import com.jetbrains.recommendersystemjavabackend.model.Movie;
+import com.jetbrains.recommendersystemjavabackend.model.MoviePage;
 import com.jetbrains.recommendersystemjavabackend.repository.GenreRepository;
 import com.jetbrains.recommendersystemjavabackend.repository.MovieRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,31 +23,39 @@ public class MovieService {
     private final GenreRepository genreRepository;
     private final AvroProducerService avroProducerService;
 
-    public Page<MovieEntity> getAllMovies(int page, int size) {
-        return movieRepository.findAll(PageRequest.of(page, size));
+    public MoviePage getAllMovies(int page, int size) {
+
+        Page<MovieEntity> movieEntityPage = movieRepository.findAll(PageRequest.of(page, size));
+        MoviePage moviePage = new MoviePage();
+        moviePage.setContent(movieEntityPage.map(MovieEntity::toMovie).toList());
+        moviePage.setTotalPages(movieEntityPage.getTotalPages());
+        moviePage.setSize(size);
+        moviePage.setNumber(page);
+        moviePage.setTotalElements((int) movieEntityPage.getTotalElements());
+        return moviePage;
     }
 
     public Movie getMovieById(Integer id) {
         return movieRepository.findById(Long.valueOf(id)).map(MovieEntity::toMovie).orElse(null);
     }
 
-    @Transactional
+
     public void deleteMovieById(Integer id) {
         movieRepository.deleteById(Long.valueOf(id));
     }
 
-    @Transactional
+
     public Movie updateMovie(Integer id, Movie movie) {
         Optional<MovieEntity> movieEntity = movieRepository.findById(Long.valueOf(id));
         if (movieEntity.isEmpty()) {
             return null;
         }
 
-        if(movieRepository.existsByImdbId(movie.getImdbId()) && !movieEntity.get().getImdbId().equals(movie.getImdbId())){
+        if (movieRepository.existsByImdbId(movie.getImdbId()) && !movieEntity.get().getImdbId().equals(movie.getImdbId())) {
             throw new IllegalArgumentException("Movie imdb already exists");
         }
 
-        if(movieRepository.existsByTitle(movie.getTitle()) && !movieEntity.get().getTitle().equals(movie.getTitle())){
+        if (movieRepository.existsByTitle(movie.getTitle()) && !movieEntity.get().getTitle().equals(movie.getTitle())) {
             throw new IllegalArgumentException("Movie title already exists");
         }
 
@@ -58,7 +65,7 @@ public class MovieService {
 
         movie.getGenres().forEach(genre -> {
             Optional<GenreEntity> foundGenre = genreRepository.findById(genre);
-            if(foundGenre.isEmpty()){
+            if (foundGenre.isEmpty()) {
                 throw new IllegalArgumentException("Genre not found");
             }
         });
@@ -69,11 +76,12 @@ public class MovieService {
 
     }
 
+
     public Movie createMovie(Movie movie) {
-        if(movieRepository.existsByImdbId(movie.getImdbId())){
+        if (movieRepository.existsByImdbId(movie.getImdbId())) {
             throw new IllegalArgumentException("Movie imdb already exists");
         }
-        if(movieRepository.existsByTitle(movie.getTitle())){
+        if (movieRepository.existsByTitle(movie.getTitle())) {
             throw new IllegalArgumentException("Movie title already exists");
         }
 
@@ -84,7 +92,7 @@ public class MovieService {
 
         movie.getGenres().forEach(genre -> {
             Optional<GenreEntity> foundGenre = genreRepository.findById(genre);
-            if(foundGenre.isEmpty()){
+            if (foundGenre.isEmpty()) {
                 throw new IllegalArgumentException("Genre not found");
             }
         });
@@ -92,6 +100,6 @@ public class MovieService {
         movieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
         Movie saved = movieRepository.save(movieEntity).toMovie();
         avroProducerService.sendMovieEvent(movieEntity.getFileId(), movieEntity.getTitle(), movie.getGenres());
-        return  saved;
+        return saved;
     }
 }

@@ -3,8 +3,6 @@ package com.jetbrains.recommendersystemjavabackend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "genres")
 @ToString

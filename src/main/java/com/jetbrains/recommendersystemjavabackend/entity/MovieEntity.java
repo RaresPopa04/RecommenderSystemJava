@@ -1,5 +1,6 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jetbrains.recommendersystemjavabackend.model.Movie;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -13,8 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "movies")
 @Data
-@Getter
-@Setter
 @ToString
 public class MovieEntity {
 
@@ -40,6 +39,7 @@ public class MovieEntity {
     List<GenreEntity> genres;
 
     @OneToMany(mappedBy = "movie")
+    @JsonManagedReference
     private List<RatingEntity> ratings;
 
     @Column(name = "created_at", nullable = false)

@@ -1,5 +1,7 @@
 package com.jetbrains.recommendersystemjavabackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jetbrains.recommendersystemjavabackend.model.Rating;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,11 +11,9 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @Entity
 @Data
-@ToString
+@ToString(exclude = {"user", "movie"})
 @Table(name = "ratings")
 public class RatingEntity {
 
@@ -21,11 +21,15 @@ public class RatingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "movie_id", nullable = false)
     private MovieEntity movie;
 
