@@ -38,6 +38,12 @@
             <name>Confluent Maven Repository</name>
             <url>https://packages.confluent.io/maven/</url>
         </repository>
+
+        <repository>
+            <id>central</id>
+            <name>5572f724adcb-releases</name>
+            <url>http://localhost:8082/artifactory/libs-release-local</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -83,6 +89,12 @@
             <groupId>io.confluent</groupId>
             <artifactId>kafka-avro-serializer</artifactId>
             <version>7.3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.recommender</groupId>
+            <artifactId>avro-models</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
