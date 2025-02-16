@@ -37,6 +37,12 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--list", "--zookeeper", "zookeeper:2181 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   schema_registry:
     image: confluentinc/cp-schema-registry:latest
@@ -65,6 +71,150 @@ services:
       - ./artifactory_data:/var/opt/jfrog/artifactory
     restart: unless-stopped
 
+  connect:
+    image: confluentinc/cp-kafka-connect:latest
+    container_name: connect
+    depends_on:
+      - kafka
+      - schema_registry
+    ports:
+      - '8084:8083'
+    environment:
+#      intern communication
+        CONNECT_BOOTSTRAP_SERVERS: kafka:9092
+        CONNECT_REST_ADVERTISED_HOST_NAME: connect
+        CONNECT_REST_PORT: 8084
+        CONNECT_GROUP_ID: connect-cluster
+        CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
+        CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
+        CONNECT_STATUS_STORAGE_TOPIC: connect-status
+        CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_REST_ADVERTISED_LISTENERS: http://connect:8084
+        CONNECT_PLUGIN_PATH: /usr/share/java,/etc/kafka-connect/jars
+
+
+  conduktor-console:
+    image: conduktor/conduktor-console:1.31.0
+    ports:
+      - "8080:8080"
+    volumes:
+      - conduktor_data:/var/conduktor
+    environment:
+      CDK_DATABASE_URL: "postgresql://conduktor:change_me@postgresql:5432/conduktor-console"
+      CDK_KAFKASQL_DATABASE_URL: "postgresql://conduktor:change_me@postgresql-sql:5432/conduktor-sql"
+      CDK_ORGANIZATION_NAME: "getting-started"
+      CDK_CLUSTERS_0_ID: "local-kafka"
+      CDK_CLUSTERS_0_NAME: "local-kafka"
+      CDK_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+      CDK_CLUSTERS_0_SCHEMAREGISTRY_URL: "http://kafka:8081"
+      CDK_CLUSTERS_0_COLOR: "#6A57C8"
+      CDK_CLUSTERS_0_ICON: "kafka"
+      CDK_CLUSTERS_1_ID: "cdk-gateway"
+      CDK_CLUSTERS_1_NAME: "cdk-gateway"
+      CDK_CLUSTERS_1_BOOTSTRAPSERVERS: "conduktor-gateway:6969"
+      CDK_CLUSTERS_1_SCHEMAREGISTRY_URL: "http://kafka:8081"
+      CDK_CLUSTERS_1_KAFKAFLAVOR_URL: "http://conduktor-gateway:8888"
+      CDK_CLUSTERS_1_KAFKAFLAVOR_USER: "admin"
+      CDK_CLUSTERS_1_KAFKAFLAVOR_PASSWORD: "conduktor"
+      CDK_CLUSTERS_1_KAFKAFLAVOR_VIRTUALCLUSTER: "passthrough"
+      CDK_CLUSTERS_1_KAFKAFLAVOR_TYPE: "Gateway"
+      CDK_CLUSTERS_1_COLOR: "#6A57C8"
+      CDK_CLUSTERS_1_ICON: "dog"
+      CDK_MONITORING_CORTEX-URL: http://conduktor-monitoring:9009/
+      CDK_MONITORING_ALERT-MANAGER-URL: http://conduktor-monitoring:9010/
+      CDK_MONITORING_CALLBACK-URL: http://conduktor-console:8080/monitoring/api/
+      CDK_MONITORING_NOTIFICATIONS-CALLBACK-URL: http://localhost:8080
+    depends_on:
+      kafka:
+        condition: service_healthy
+      postgresql:
+        condition: service_healthy
+      postgresql-2:
+        condition: service_healthy
+
+    # Conduktor stores its metadata in PostgreSQL.
+    # Consider using an external managed database for production usage.
+    # https://docs.conduktor.io/platform/get-started/configuration/database/
+  postgresql:
+    image: postgres:14
+    hostname: postgresql
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    environment:
+      PGDATA: "/var/lib/postgresql/data"
+      POSTGRES_DB: "conduktor-console"
+      POSTGRES_USER: "conduktor"
+      POSTGRES_PASSWORD: "change_me"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    # Conduktor depends on a separate db for storing Kafka data for SQL querying
+    # It is optional, but required if you wish to use SQL functionality
+    # Separate db ensures continued operation of the core Console experience if the SQL db becomes unavailable
+    # https://docs.conduktor.io/platform/guides/configure-sql/
+  postgresql-2:
+    image: postgres:14
+    hostname: postgresql-sql
+    volumes:
+      - pg_data_sql:/var/lib/postgresql/data
+    environment:
+      PGDATA: "/var/lib/postgresql/data"
+      POSTGRES_DB: "conduktor-sql"
+      POSTGRES_USER: "conduktor"
+      POSTGRES_PASSWORD: "change_me"
+      POSTGRES_HOST_AUTH_METHOD: "scram-sha-256"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    # Conduktor uses Cortex to store Kafka and applications metrics as well as alerting.
+    # It is optional.
+    # https://docs.conduktor.io/platform/get-started/configuration/cortex/
+  conduktor-monitoring:
+    image: conduktor/conduktor-console-cortex:1.31.0
+    environment:
+      CDK_CONSOLE-URL: "http://conduktor-console:8080"
+
+    # Conduktor comes with its Gateway, a Kafka proxy bringing many security and governance features.
+    # https://docs.conduktor.io/gateway/
+  conduktor-gateway:
+    image: conduktor/conduktor-gateway:3.5.0
+    hostname: conduktor-gateway
+    container_name: conduktor-gateway
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: curl localhost:8888/health
+      interval: 5s
+      retries: 25
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+    # As this is a get started, we want to bring some life to the cluster to demonstrate the value of Conduktor.
+    # This is totally optional and only used for this purpose. Do not use it in production.
+  conduktor-data-generator:
+    image: conduktor/conduktor-data-generator:0.8
+    container_name: conduktor-data-generator
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: conduktor-gateway:6969
+      KAFKA_SCHEMA_REGISTRY_URL: http://kafka:8081
+      GATEWAY_ADMIN_API: http://conduktor-gateway:8888
+    restart: on-failure
+
+
+
 volumes:
   artifactory_data:
     driver: local
@@ -72,3 +222,6 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '/path/to/your/larger/volume'
+  pg_data: { }
+  pg_data_sql: { }
+  conduktor_data: { }

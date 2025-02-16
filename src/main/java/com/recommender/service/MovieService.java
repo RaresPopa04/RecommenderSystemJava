@@ -70,7 +70,7 @@ public class MovieService {
             }
         });
 
-        avroProducerService.sendMovieEvent(currentMovieEntity.getFileId(), currentMovieEntity.getTitle(), movie.getGenres());
+        avroProducerService.sendMovieEvent(currentMovieEntity.getFileId(), movie.getGenres());
         currentMovieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
         return movieRepository.save(currentMovieEntity).toMovie();
 
@@ -99,7 +99,7 @@ public class MovieService {
 
         movieEntity.setGenres(genreRepository.findAllById(movie.getGenres()));
         Movie saved = movieRepository.save(movieEntity).toMovie();
-        avroProducerService.sendMovieEvent(movieEntity.getFileId(), movieEntity.getTitle(), movie.getGenres());
+        avroProducerService.sendMovieEvent(movieEntity.getFileId(),  movie.getGenres());
         return saved;
     }
 }

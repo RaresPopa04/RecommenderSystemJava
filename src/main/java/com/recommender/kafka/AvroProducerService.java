@@ -36,10 +36,9 @@ public class AvroProducerService {
         template.send(userTopic, userId.toString(), user);
     }
 
-    public void sendMovieEvent(Long movieId, String title, List<String> genres){
+    public void sendMovieEvent(Long movieId, List<String> genres){
         Movie movie = Movie.newBuilder()
                 .setMovieId(movieId)
-                .setTitle(title)
                 .setGenres(genres.stream().map(string -> (CharSequence) string).toList())
                 .build();
         template.send(movieTopic, movieId.toString(), movie);
